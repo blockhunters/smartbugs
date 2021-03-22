@@ -162,6 +162,11 @@ def parse_results(output, tool, file_name, container, cfg, logs, results_folder,
                     tar = tarfile.open(os.path.join(output_folder, 'result.tar'))
                     output_file = tar.extractfile('output.json')
                     results['analysis'] = json.loads(output_file.read())
+            elif tool == 'ilf':
+                if os.path.exists(os.path.join(output_folder, 'result.tar')):
+                    tar = tarfile.open(os.path.join(output_folder, 'result.tar'))
+                    output_file = tar.extractfile('results.json')
+                    results['analysis'] = json.loads(output_file.read())
             elif tool == 'manticore':
                 if os.path.exists(os.path.join(output_folder, 'result.tar')):
                     tar = tarfile.open(os.path.join(output_folder, 'result.tar'))

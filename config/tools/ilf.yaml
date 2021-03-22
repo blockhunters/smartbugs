@@ -1,0 +1,5 @@
+docker_image:
+  default: smartbugs/ilf
+output_in_files:
+  folder: /results.json
+cmd: /workdir/scripts/entrypoint.sh
