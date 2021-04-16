@@ -11,8 +11,12 @@ rm example/crowdsale/transactions.json
 rm example/crowdsale/migrations/2_deploy_contracts.js
 cp "$1" example/crowdsale/contracts/
 
-contracts=$(python3.8 /workdir/scripts/printContractNames.py "$1" | grep -v ANTLR)
+contracts=$(python3 /workdir/scripts/printContractNames.py "$1" | grep -v ANTLR)
 echo $contracts
+
+solc_version=$(python3 /workdir/scripts/get_solc_version.py "$1" | grep -v ANTLR)
+solc-select install $solc_version
+solc-select use $solc_version
 
 i=0
 for c in $contracts; do
@@ -30,7 +34,7 @@ echo >> example/crowdsale/migrations/2_deploy_contracts.js
 
 cat example/crowdsale/migrations/2_deploy_contracts.js
 
-python3 script/extract.py --proj example/crowdsale/ --port 8545
+python3 /go/src/ilf/script/extract.py --proj /go/src/ilf/example/crowdsale/ --port 8545
 cat example/crowdsale/transactions.json
 
 
@@ -39,7 +43,7 @@ rm -rf /results.json /new_results.json /old_results.json
 touch /results.json
 for c in $contracts; do
     echo Contract: $c
-    python3 -m ilf --proj ./example/crowdsale/ --contract $c --fuzzer imitation --model ./model/ --limit 2000 --log_to_file results.txt -v 1
+    python3 -m ilf --limit 2000 --model ./model/ --fuzzer imitation --proj ./example/crowdsale/ --contract $c --log_to_file results.txt -v 1
     tail -1 results.txt | awk '{$1=""; $2=""; print $0}' | jq '(keys_unsorted[]) as $key | if $key!="tx_count" and $key!="num_contracts" and $key!="insn_coverage" and $key!="block_coverage"  then {($key): .[$key]} else empty end' > /new_results.json
     if [ $i -gt 0 ]; then
         cp /results.json /old_results.json
