@@ -234,7 +234,7 @@ def analyse_files(tool, file, logs, now):
         cmd = cfg['cmd']
         with open(file, 'r', encoding='utf-8') as fd:
             fst = parser.parse(fd.read())['children'][0]
-            solv = f"--solv {fst['value'].strip('^')}" if fst['type'] == "PragmaDirective" else ""
+            solv = f"--solv {fst['value'].strip('^')}" if fst and fst['type'] == "PragmaDirective" else ""
             cmd = cmd.format(solv=solv)
         if '{contract}' in cmd:
             cmd = cmd.replace('{contract}', '/' + file)
