@@ -1,4 +1,4 @@
-FROM ilf-rad
+FROM ilf
 RUN apt-get install -y python3.8 jq
 
 RUN python3 -m pip --no-cache-dir install --upgrade setuptools pip
