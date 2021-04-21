@@ -232,10 +232,15 @@ def analyse_files(tool, file, logs, now):
             pull_image(image, logs)
 
         cmd = cfg['cmd']
-        with open(file, 'r', encoding='utf-8') as fd:
-            fst = parser.parse(fd.read())['children'][0]
-            solv = f"--solv {fst['value'].strip('^')}" if fst and fst['type'] == "PragmaDirective" else ""
-            cmd = cmd.format(solv=solv)
+        if tool == 'mythril':
+            with open(file, 'r', encoding='utf-8') as fd:
+                try:
+                    fst = parser.parse(fd.read())['children'][0]
+                    solv = f"--solv {fst['value'].strip('^')}" if fst and fst['type'] == "PragmaDirective" else ""
+                    cmd = cmd.format(solv=solv)
+                except:
+                    print('\x1b[1;33m' + 'WARNING: could not parse solidity file to get solc version' + '\x1b[0m')
+                    logs.write('WARNING: could not parse solidity file to get solc version \n')
         if '{contract}' in cmd:
             cmd = cmd.replace('{contract}', '/' + file)
         else:
