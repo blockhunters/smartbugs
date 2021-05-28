@@ -7,6 +7,7 @@ cd /go/src/ilf
 
 rm -rf example/crowdsale/build
 rm example/crowdsale/contracts/crowdsale.sol
+rm example/crowdsale/contracts/Migrations.sol
 rm example/crowdsale/transactions.json
 rm example/crowdsale/migrations/2_deploy_contracts.js
 cp "$1" example/crowdsale/contracts/
@@ -17,6 +18,7 @@ echo $contracts
 solc_version=$(python3 /workdir/scripts/get_solc_version.py "$1" | grep -v ANTLR)
 solc-select install $solc_version
 solc-select use $solc_version
+python3 /workdir/scripts/get_migration.py $solc_version >> /go/src/ilf/example/crowdsale/contracts/Migrations.sol
 
 i=0
 for c in $contracts; do
