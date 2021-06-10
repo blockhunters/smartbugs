@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+      "@types/node": "^15.6.1",
+      "solc-typed-ast": "^5.0.2"
+    }
+}

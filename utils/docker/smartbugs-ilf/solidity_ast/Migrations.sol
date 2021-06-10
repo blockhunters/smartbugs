@@ -1,4 +1,4 @@
-pragma solidity {{ solc_version }};
+pragma solidity ^0.4.11;
 
 contract Migrations {
   address public owner;
@@ -8,7 +8,9 @@ contract Migrations {
     if (msg.sender == owner) _;
   }
 
-{{ constructor }}
+  function Migrations() public {
+    owner = msg.sender;
+  }
 
   function setCompleted(uint completed) public restricted {
     last_completed_migration = completed;
